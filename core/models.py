@@ -13,7 +13,8 @@ class BaseModel(models.Model):
 
 class CSVRequest(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(upload_to='csv_files/')
+    input_file = models.FileField(upload_to='csv_files/input/')
+    output_file = models.FileField(upload_to='csv_files/output/', null=True, blank=True)
     status = models.CharField(
         max_length=50,
         choices=RequestStatus.choices,

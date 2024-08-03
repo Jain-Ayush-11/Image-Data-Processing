@@ -22,4 +22,29 @@ def process_pending_requests():
                 request.save()
                 
                 # process the request for ouput csv generation
+                process_status = CSVProcessService.process_request(request=request)
+                if not process_status:
+                    # TODO: Replace print with error log statement
+                    print(f"Failed in processing of request with id {request.id}")
+
+
+@shared_task
+def reconcile_failed_requests():
+    """
+    Reconciliation task to process failed CSV requests.
+    """
+    pending_requests = CSVRequest.objects.filter(status=RequestStatus.FAILED)
+    
+    for request in pending_requests:
+        # Lock the individual request to prevent revert of all success cases as well in case of a single Failure
+        with transaction.atomic():
+            request = CSVRequest.objects.select_for_update().get(id=request.id)
+            
+            if request.status == RequestStatus.FAILED:
+                # Update the request status to PROCESSING
+                request.status = RequestStatus.PROCESSING
+                request.save()
+                
+                # process the request for ouput csv generation
                 CSVProcessService.process_request(request=request)
+

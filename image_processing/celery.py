@@ -10,9 +10,15 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 
 # periodic tasks
 app.conf.beat_schedule = {
-    'process-pending-requests-every-hour': {
+    # NOTE: Currently the time is set very low for testing and output purposes, 
+    #       should be increased accordingly
+    'process-pending-requests': {
         'task': 'core.tasks.process_pending_requests',
         'schedule': crontab(minute='*/1'),  # Every 1 minutes
+    },
+    'reconcile-failed-requests': {
+        'task': 'core.tasks.reconcile_failed_requests',
+        'schedule': crontab(minute='*/10'),  # Every 10 minutes
     },
 }
 

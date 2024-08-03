@@ -3,24 +3,31 @@ import uuid
 
 from core.enums import RequestStatus
 
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
-class Request(models.Model):
+    class Meta:
+        abstract = True
+
+
+class CSVRequest(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.FileField(upload_to='csv_files/')
     status = models.CharField(
         max_length=50,
         choices=RequestStatus.choices,
         default=RequestStatus.PENDING
     )
-    created_at = models.DateTimeField(auto_now_add=True)
 
 
-class Product(models.Model):
+class Product(BaseModel):
     serial_number = models.IntegerField()
     name = models.CharField(max_length=255)
-    request = models.ForeignKey(Request, related_name='products', on_delete=models.CASCADE)
+    request = models.ForeignKey(CSVRequest, related_name='products', on_delete=models.CASCADE)
 
 
-class Image(models.Model):
+class Image(BaseModel):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     input_url = models.URLField()
     output_url = models.URLField(null=True, blank=True)

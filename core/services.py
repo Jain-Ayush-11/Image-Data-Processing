@@ -3,6 +3,7 @@ from typing import List
 import uuid
 from django.core.files.uploadedfile import UploadedFile
 from core.enums import RequestStatus
+from core.exceptions import CSVRequestNotFoundException
 from core.models import CSVRequest, Product, Image
 import pandas as pd
 import requests
@@ -170,3 +171,14 @@ class CSVProcessService:
             request.save()
 
             return False
+
+
+class CSVOutputService:
+    @classmethod
+    def get_request_output(cls, request_id: str):
+        request = CSVRequest.objects.filter(id=request_id).first()
+
+        if request is None:
+            raise CSVRequestNotFoundException
+        
+        return request

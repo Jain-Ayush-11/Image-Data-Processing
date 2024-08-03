@@ -21,3 +21,19 @@ class CSVUploadSerializer(serializers.Serializer):
     
         except Exception as e:
             raise serializers.ValidationError(f'Error reading CSV file: {str(e)}')
+
+
+class OutputCSVRequestSerializer(serializers.Serializer):
+    request_id = serializers.UUIDField()
+
+
+class OutputCSVResponseSerializer(serializers.Serializer):
+    status = serializers.CharField()
+    output_file_url = serializers.SerializerMethodField(required=False)
+
+    def get_output_file_url(self, instance):
+        request = self.context.get('request')
+        if not request:
+            return instance.output_file.url
+        # build the absolute uri for the path
+        return request.build_absolute_uri(instance.output_file.url)

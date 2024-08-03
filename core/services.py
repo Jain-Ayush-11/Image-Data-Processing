@@ -8,6 +8,7 @@ import pandas as pd
 import requests
 from io import BytesIO
 from PIL import Image as PILImage
+from django.core.files.base import ContentFile
 
 class CSVUploadService:
     @classmethod
@@ -17,6 +18,9 @@ class CSVUploadService:
         :param file: The uploaded CSV file for a request
         :return: The created Request object.
         """
+        directory = 'media/csv_files/input/'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         request_obj = CSVRequest.objects.create(input_file=file)
         return request_obj
 
@@ -113,10 +117,10 @@ class CSVProcessService:
         with open(file_path, 'wb') as f:
             f.write(image_file.getvalue())
         
-        return f"/media/{file_path}"
+        return f"/{file_path}"
     
     @classmethod
-    def _save_output_csv(cls, output_data: list, input_csv_path: str) -> str:
+    def _save_output_csv(cls, output_data: list, input_csv_path: str) -> ContentFile:
         """
         Creates a CSV with the data specified
 
@@ -124,12 +128,13 @@ class CSVProcessService:
         :param input_csv_path: Path of the input csv processed
         :return: Path of the resulting output csv generated
         """
-        output_csv_path = input_csv_path.replace('.csv', '_output.csv')
-        
-        df = pd.DataFrame(output_data)
-        df.to_csv(output_csv_path, index=False)
-        
-        return output_csv_path    
+        directory = 'media/csv_files/output/'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        output_csv_content = pd.DataFrame(output_data).to_csv(index=False)
+        output_csv_file = ContentFile(output_csv_content)
+        output_csv_file.name = input_csv_path.split('/')[-1].replace('.csv', '_output.csv')
+        return output_csv_file
 
     @classmethod
     def process_request(cls, request: CSVRequest) -> bool:
@@ -143,21 +148,22 @@ class CSVProcessService:
             output_data = cls._process_input_csv(request=request)
             
             # Save the output CSV
-            output_csv_path = cls._save_output_csv(output_data, request.file.path)
+            output_csv_file = cls._save_output_csv(output_data, request.input_file.path)
             
             # Update the request output file and status
-            request.output_file = output_csv_path
+            request.output_file.save(output_csv_file.name, output_csv_file)
             request.status = RequestStatus.SUCCESS
             request.save()
 
             # remove the output csv from the machine
-            if os.path.exists(output_csv_path):
-                os.remove(output_csv_path)
+            if os.path.exists(output_csv_file.name):
+                os.remove(output_csv_file.name)
 
             return True
         
-        except Exception:
+        except Exception as e:
             # TODO: Add a log statement for the error
+            print(e)
 
             # Mark the request as FAILED, will be picked by a reconciliation worker
             request.status = RequestStatus.FAILED

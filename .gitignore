@@ -1,4 +1,7 @@
-media/csv_files/
+media/compressed_images
+*.bak
+*.dir
+*.dat
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

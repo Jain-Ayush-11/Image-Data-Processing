@@ -1,4 +1,3 @@
-# myapp/tasks.py
 from django.db import transaction
 from celery import shared_task
 from core.enums import RequestStatus

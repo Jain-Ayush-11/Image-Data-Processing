@@ -2,7 +2,7 @@
 This system is designed to process CSV files containing product information and image URLs.
 It compresses the images asynchronously and generates a new CSV with updated image URLs.
 
-**The application is hosted using seenode at [url](http://13.234.76.163:8000/).**
+**The application is hosted using AWS EC2 at [url](http://13.234.76.163:8000/).**
 
 ## Run the Project
 

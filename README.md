@@ -18,4 +18,4 @@ Please checkout the complete LLD and overview of the system - [LLD Document](/Do
 ## API Endpoints
 The Endpoints role and functions are discussed int the LLD Document's [API Endpoint Section](/Docs/LLD.md#21-api-endpoints).
 
-Please see for the behaviour with sample requests, response, curl and PostMan Collection - [API Endpoints](/Docs/Endpoints.md).
+Please see for the behaviour with sample requests, response, curl and **Postman** Collection - [API Endpoints](/Docs/Endpoints.md).

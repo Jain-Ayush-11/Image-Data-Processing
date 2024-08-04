@@ -99,3 +99,19 @@ class OutputCSVView(APIView):
                     'payload': ''
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class WebhookView(APIView):
+    def post(self, request):
+        payload = request.data
+
+        # TODO: replace with log instead to get it on the logging service
+        print(payload)
+
+        return Response(
+            {
+                'status': 'success',
+                'message': 'Webhook received successfully',
+                'payload': ''
+            }, status=status.HTTP_200_OK
+        )

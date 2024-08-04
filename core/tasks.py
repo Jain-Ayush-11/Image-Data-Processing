@@ -2,7 +2,7 @@ from django.db import transaction
 from celery import shared_task
 from core.enums import RequestStatus
 from core.models import CSVRequest
-from core.services import CSVProcessService
+from core.services import CSVProcessService, WebhookService
 
 @shared_task
 def process_pending_requests():
@@ -26,6 +26,12 @@ def process_pending_requests():
                 if not process_status:
                     # TODO: Replace print with error log statement
                     print(f"Failed in processing of request with id {request.id}")
+
+                try:
+                    WebhookService.send_payload_to_webhook(request_obj=request)
+                except Exception as e:
+                    # TODO: Replace with log
+                    print(e)
 
 
 @shared_task

@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 import pandas as pd
 
@@ -34,6 +35,14 @@ class OutputCSVResponseSerializer(serializers.Serializer):
     def get_output_file_url(self, instance):
         request = self.context.get('request')
         if not request:
-            return instance.output_file.url
+            return f'{settings.BASE_URL}{instance.output_file.url}'
         # build the absolute uri for the path
         return request.build_absolute_uri(instance.output_file.url)
+
+
+class WebhookPayloadSerializer(serializers.Serializer):
+    request_id = serializers.UUIDField(source='id')
+    output_csv = serializers.SerializerMethodField()
+
+    def get_output_csv(self, instance):
+        return OutputCSVResponseSerializer(instance, context=self.context).data

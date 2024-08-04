@@ -131,6 +131,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+BASE_URL = 'http://localhost:8000'
+
+
 # CELERY SETTINGS
 CELERY_TIMEZONE = 'Asia/Kolkata'
 CELERY_BROKER_URL = 'redis://localhost:6379'
@@ -139,3 +142,6 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_TIME_LIMIT = 5 * 60
+
+# WEBHOOK
+WEBHOOK_URL = f'{BASE_URL}/api/webhook/'

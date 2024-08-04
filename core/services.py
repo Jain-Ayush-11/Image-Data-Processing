@@ -1,6 +1,7 @@
 import os
 from typing import List
 import uuid
+from django.conf import settings
 from django.core.files.uploadedfile import UploadedFile
 from core.enums import RequestStatus
 from core.exceptions import CSVRequestNotFoundException
@@ -10,6 +11,8 @@ import requests
 from io import BytesIO
 from PIL import Image as PILImage
 from django.core.files.base import ContentFile
+
+from core.serializers import WebhookPayloadSerializer
 
 class CSVUploadService:
     @classmethod
@@ -182,3 +185,17 @@ class CSVOutputService:
             raise CSVRequestNotFoundException
         
         return request
+
+
+class WebhookService:
+    @classmethod
+    def send_payload_to_webhook(cls, request_obj: CSVRequest):
+        try:
+            webhook_url = settings.WEBHOOK_URL
+            serializer = WebhookPayloadSerializer(request_obj)
+            requests.post(webhook_url, json=serializer.data)
+        except Exception as e:
+            msg = f'Fatal Error in sending request to Webhook :: {e}'
+            # TODO: Replace print with log statement
+            print(msg)
+            raise Exception(msg)

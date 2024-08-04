@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'mydatabase',      # Name of the database (e.g., POSTGRES_DB)
         'USER': 'myuser',          # Username (e.g., POSTGRES_USER)
         'PASSWORD': 'mypassword',  # Password (e.g., POSTGRES_PASSWORD)
-        'HOST': 'postgres',        # Service name from docker-compose (matches the service name)
+        'HOST': 'localhost',        # Service name from docker-compose (matches the service name)
         'PORT': '5432',
     }
 }

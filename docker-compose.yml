@@ -1,10 +1,20 @@
 version: '3'
 
 services:
-  web:
+  migrate:
     build:
       context: .
       dockerfile: Dockerfile
+    command: python manage.py migrate
+    environment:
+      - DEBUG=1
+    depends_on:
+      - redis
+      - postgres
+
+  web:
+    build:
+      context: .
     command: python manage.py runserver 0.0.0.0:8000
     links:
       - redis
@@ -16,11 +26,22 @@ services:
       - DEBUG=1
     depends_on:
       - redis
+      - postgres
+      - migrate
 
   redis:
     image: redis
     ports:
       - "6379:6379"
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=mydatabase
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
 
   celery:
     restart: always
@@ -31,6 +52,7 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379
     command: celery -A image_processing worker --loglevel=info -P eventlet
     depends_on:
+      - postgres
       - redis
 
   celery-beat:
@@ -44,3 +66,4 @@ services:
     depends_on:
       - redis
       - celery
+      - postgres

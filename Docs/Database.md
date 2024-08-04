@@ -1,14 +1,17 @@
 # Database Schema Overview
 
 ## Scehma Overview
-
-<img src="./images/Database_overview.png">
+<p align="center">
+    <img src="./images/Database_overview.png">
+</p>
 
 This image provides a comprehensive view of the database schema, showing multiple interconnected tables and their relationships.
 
 ## Detailed Schema (with built-ins)
 
-<img src="./images/Database_depth.png">
+<p align="center">
+    <img src="./images/Database_depth.png">
+</p>
 
 This image shows a more detailed view of specific tables related to request processing and product management.
 

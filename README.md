@@ -31,7 +31,7 @@ Please see for the behaviour with sample requests, response, curl and **Postman*
   <img style="width: 250px; height: 300px;" src="./Docs/images/Myself.png" />
 </p>
 
-I'm Ayush, a 2024 graduate with a Bachelor's in Computer Science and Engineering.
+I'm Ayush, an ungraduate with a Bachelor's in Computer Science and Engineering.
 
 **About me**:
 I'm currently working as a Backend Developer. I have strong problem solving skills and regularly practice on major coding platforms like Leetcode, Codeforces.

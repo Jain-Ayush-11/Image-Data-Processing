@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    links:
+      - redis
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  celery:
+    restart: always
+    build:
+      context: .
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+    command: celery -A image_processing worker --loglevel=info -P eventlet
+    depends_on:
+      - redis
+
+  celery-beat:
+    restart: always
+    build:
+      context: .
+    command: celery -A image_processing beat --loglevel=info
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+    depends_on:
+      - redis
+      - celery

@@ -3,7 +3,7 @@
 ## 1. System Overview
 This system is designed to process CSV files containing product information and image URLs. It compresses the images asynchronously and generates a new CSV with updated image URLs.
 
-<img src="../Docs/System-Visualization.png">
+<img src="../Docs/images/System-Visualization.png">
 
 ## 2. System Components
 

@@ -1,6 +1,6 @@
 from django.db import transaction
 from celery import shared_task
-from core.enums import RequestStatus
+from core.enums import RequestStatusChoices
 from core.models import CSVRequest
 from core.services import CSVProcessService, WebhookService
 
@@ -9,16 +9,16 @@ def process_pending_requests():
     """
     Periodic task to process pending CSV requests.
     """
-    pending_requests = CSVRequest.objects.filter(status=RequestStatus.PENDING)
+    pending_requests = CSVRequest.objects.filter(status=RequestStatusChoices.PENDING)
     
     for request in pending_requests:
         # Lock the individual request to prevent revert of all success cases as well in case of a single Failure
         with transaction.atomic():
             request = CSVRequest.objects.select_for_update().get(id=request.id)
             
-            if request.status == RequestStatus.PENDING:
+            if request.status == RequestStatusChoices.PENDING:
                 # Update the request status to PROCESSING
-                request.status = RequestStatus.PROCESSING
+                request.status = RequestStatusChoices.PROCESSING
                 request.save()
                 
                 # process the request for ouput csv generation
@@ -39,16 +39,16 @@ def reconcile_failed_requests():
     """
     Reconciliation task to process failed CSV requests.
     """
-    pending_requests = CSVRequest.objects.filter(status=RequestStatus.FAILED)
+    pending_requests = CSVRequest.objects.filter(status=RequestStatusChoices.FAILED)
     
     for request in pending_requests:
         # Lock the individual request to prevent revert of all success cases as well in case of a single Failure
         with transaction.atomic():
             request = CSVRequest.objects.select_for_update().get(id=request.id)
             
-            if request.status == RequestStatus.FAILED:
+            if request.status == RequestStatusChoices.FAILED:
                 # Update the request status to PROCESSING
-                request.status = RequestStatus.PROCESSING
+                request.status = RequestStatusChoices.PROCESSING
                 request.save()
                 
                 # process the request for ouput csv generation

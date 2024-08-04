@@ -3,7 +3,7 @@ from typing import List
 import uuid
 from django.conf import settings
 from django.core.files.uploadedfile import UploadedFile
-from core.enums import RequestStatus
+from core.enums import RequestStatusChoices
 from core.exceptions import CSVRequestNotFoundException
 from core.models import CSVRequest, Product, Image
 import pandas as pd
@@ -156,7 +156,7 @@ class CSVProcessService:
             
             # Update the request output file and status
             request.output_file.save(output_csv_file.name, output_csv_file)
-            request.status = RequestStatus.SUCCESS
+            request.status = RequestStatusChoices.SUCCESS
             request.save()
 
             # remove the output csv from the machine
@@ -170,7 +170,7 @@ class CSVProcessService:
             print(e)
 
             # Mark the request as FAILED, will be picked by a reconciliation worker
-            request.status = RequestStatus.FAILED
+            request.status = RequestStatusChoices.FAILED
             request.save()
 
             return False

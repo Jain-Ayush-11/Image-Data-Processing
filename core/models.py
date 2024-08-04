@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 
-from core.enums import RequestStatus
+from core.enums import RequestStatusChoices
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -17,8 +17,8 @@ class CSVRequest(BaseModel):
     output_file = models.FileField(upload_to='csv_files/output/', null=True, blank=True)
     status = models.CharField(
         max_length=50,
-        choices=RequestStatus.choices,
-        default=RequestStatus.PENDING
+        choices=RequestStatusChoices.choices,
+        default=RequestStatusChoices.PENDING
     )
 
 

@@ -34,10 +34,12 @@ class OutputCSVResponseSerializer(serializers.Serializer):
 
     def get_output_file_url(self, instance):
         request = self.context.get('request')
-        if not request:
-            return f'{settings.BASE_URL}{instance.output_file.url}'
-        # build the absolute uri for the path
-        return request.build_absolute_uri(instance.output_file.url)
+        if instance.output_file:
+            if not request:
+                return f'{settings.BASE_URL}{instance.output_file.url}'
+            # build the absolute uri for the path
+            return request.build_absolute_uri(instance.output_file.url)
+        return None
 
 
 class WebhookPayloadSerializer(serializers.Serializer):

@@ -148,6 +148,8 @@ class CSVProcessService:
         :param request: CSV Request object to be processed
         """
         try:
+            print(f"Recieved Request {request} for processing")
+
             # List for output data to create output csv
             output_data = cls._process_input_csv(request=request)
             

@@ -1,6 +1,6 @@
 # Run the Project
 
-**The application is hosted using seenode at [url](https://web-jnwfnx1u4gc3.up-de-fra1-k8s-1.apps.run-on-seenode.com/).**
+**The application is hosted using seenode at [url](http://13.234.76.163:8000/).**
 
 ## Project Setup
 The project is dockerized so just need to build and run the docker container, it will take care of all the DB setup and such.

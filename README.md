@@ -2,6 +2,8 @@
 This system is designed to process CSV files containing product information and image URLs.
 It compresses the images asynchronously and generates a new CSV with updated image URLs.
 
+**The application is hosted using seenode at [url](https://web-jnwfnx1u4gc3.up-de-fra1-k8s-1.apps.run-on-seenode.com/).**
+
 ## Run the Project
 
 To run the project, we can directly use the docker container or set up each resources individually.

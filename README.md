@@ -2,6 +2,12 @@
 This system is designed to process CSV files containing product information and image URLs.
 It compresses the images asynchronously and generates a new CSV with updated image URLs.
 
+## Run the Project
+
+To run the project, we can directly use the docker container or set up each resources individually.
+
+For further information, please check out  - [Run the Project](/Docs/ProjectRun.md)
+
 ## Database Schema
 The System includes segregated components for a robust architechture.
 
